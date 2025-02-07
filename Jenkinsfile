@@ -1,33 +1,29 @@
 pipeline {
-    agent any  // Run on any available agent
+    agent any
 
     environment {
         CI = "true"
-        BASE_URL = "https://www.saucedemo.com"  // Update if needed
+        BASE_URL = "https://www.saucedemo.com"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                script {
-                    checkout scm  // Checkout from Git
-                }
+                checkout scm  // Fetch code from Git
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                script {
-                    sh 'npm install'  // Install required dependencies
-                }
+               sh  'which npm'
+               sh 'export PATH=$PATH:/usr/local/bin'
+               sh 'npm install'
             }
         }
 
         stage('Run Playwright Tests') {
             steps {
-                script {
-                    sh 'npx playwright test'  // Execute Playwright tests
-                }
+                sh 'npx playwright test'
             }
             post {
                 always {
@@ -38,9 +34,7 @@ pipeline {
 
         stage('Generate Allure Report') {
             steps {
-                script {
-                    sh 'npm run allure:generate'
-                }
+                sh 'npm run allure:generate'
             }
         }
 
@@ -49,6 +43,14 @@ pipeline {
                 allure([
                     results: [[path: 'allure-results']]
                 ])
+            }
+        }
+
+        stage('Deploy Report to Localhost') {
+            steps {
+                sh 'npm install -g http-server'
+                sh 'http-server allure-report -p 4000 &'
+                echo 'Allure report deployed at http://localhost:4000'
             }
         }
     }
