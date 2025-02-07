@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    
+tools {
+    nodejs 'node-js'
+}
 
     environment {
         CI = "true"
@@ -15,8 +19,6 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-               sh  'which npm'
-               sh 'export PATH=$PATH:/usr/local/bin'
                sh 'npm install'
             }
         }
