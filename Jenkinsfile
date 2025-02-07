@@ -52,8 +52,8 @@ tools {
         stage('Deploy Report to Localhost') {
             steps {
                 sh 'npm install -g http-server'
-                sh 'http-server allure-report -p 4000 &'
-                echo 'Allure report deployed at http://localhost:4000'
+                sh 'http-server allure-report -p 4050 &'
+                echo 'Allure report deployed at http://localhost:4050'
             }
         }
     }
