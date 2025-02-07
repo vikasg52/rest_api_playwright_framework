@@ -1,15 +1,15 @@
 pipeline {
-    agent any
-    
-tools {
-    nodejs 'node-js'
-}
-agent {
+  agent {
     docker {
         image 'mcr.microsoft.com/playwright:v1.50.1-focal'
         args '--user root'  // Runs container as root
     }
 }
+    
+tools {
+    nodejs 'node-js'
+}
+
 
     environment {
         CI = "true"
