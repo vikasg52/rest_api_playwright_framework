@@ -1,0 +1,8 @@
+{
+    "name": "Local Execution",
+    "type": "local",
+    "buildName": "Test Run #1",
+    "reportUrl": "http://localhost:8080/allure-report",
+    "reportName": "Playwright API Test Report"
+  }
+  

@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Product Defects",
+    "matchedStatuses": [
+      "failed"
+    ],
+    "description": "Issues related to product bugs",
+    "traceRegex": ".*AssertionError.*"
+  },
+  {
+    "name": "Test Defects",
+    "matchedStatuses": [
+      "broken"
+    ],
+    "description": "Issues related to test failures, such as incorrect test implementation",
+    "traceRegex": ".*TypeError.*"
+  },
+  {
+    "name": "Flaky Tests",
+    "matchedStatuses": [
+      "failed",
+      "broken"
+    ],
+    "description": "Tests that sometimes fail and sometimes pass",
+    "traceRegex": ".*TimeoutError.*"
+  }
+]
