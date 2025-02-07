@@ -25,6 +25,7 @@ tools {
 
         stage('Run Playwright Tests') {
             steps {
+                sh 'npx playwright install'
                 sh 'npx playwright test'
             }
             post {
