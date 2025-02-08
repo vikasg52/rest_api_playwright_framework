@@ -48,18 +48,18 @@ pipeline {
         }
 
         stage('Publish Allure Report') {
-            steps {
-                script {
-                    try {
-                        allure([
-                            results: [[path: 'allure-results']]
-                        ])
-                    } catch (Exception e) {
-                        echo 'Allure report could not be published'
-                    }
-                }
+    steps {
+        script {
+            if (fileExists('allure-results')) {
+                allure([
+                    results: [[path: 'allure-results']]
+                ])
+            } else {
+                echo '⚠️ Warning: No Allure results found!'
             }
         }
+    }
+}
 
         stage('Deploy Report to Localhost') {
         steps {
