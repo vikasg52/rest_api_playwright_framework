@@ -64,8 +64,8 @@ pipeline {
         stage('Deploy Report to Localhost') {
         steps {
         sh 'npm install http-server'  // Install locally instead of globally
-        sh 'npx http-server allure-report -p 4050 &'
-        echo 'Allure report deployed at http://localhost:4050'
+        sh 'npx http-server allure-report -p 4051 &'
+        echo 'Allure report deployed at http://localhost:4051'
     }
 }
 
