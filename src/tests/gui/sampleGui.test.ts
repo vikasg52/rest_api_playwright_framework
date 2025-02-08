@@ -13,7 +13,7 @@ test('Login to SauceDemo with valid credentials', async ({ page }) => {
   // Click the login button
   await page.click('[data-test="login-button"]');
 
-  // Verify successful login
+  // Verify successful login done
   await expect(page).toHaveURL(/.*inventory.html/);
   await expect(page.locator('.inventory_list')).toBeVisible();
 });
