@@ -15,5 +15,5 @@ test('Login to SauceDemo with valid credentials', async ({ page }) => {
 
   // Verify successful login
   await expect(page).toHaveURL(/.*inventory.html/);
-  await expect(page.locator('.inventory_listt')).toBeVisible();
+  await expect(page.locator('.inventory_list')).toBeVisible();
 });
