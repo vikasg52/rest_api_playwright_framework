@@ -52,8 +52,8 @@ pipeline {
 
         stage('Deploy Report to Localhost') {
             steps {
-                sh "npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4050 &"
-                echo 'Allure report deployed at http://localhost:4050'
+                sh "npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4051 &"
+                echo 'Allure report deployed at http://localhost:4051'
             }
         }
     }
