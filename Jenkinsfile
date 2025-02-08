@@ -1,8 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.50.1-focal'
-        }
+        label 'docker-node'  // Ensure your Jenkins node is configured with this label
     }
 
     tools {
@@ -47,15 +45,9 @@ pipeline {
 
         stage('Publish Allure Report') {
             steps {
-                script {
-                    try {
-                        allure([
-                            results: [[path: 'allure-results']]
-                        ])
-                    } catch (Exception e) {
-                        echo 'Allure report could not be published'
-                    }
-                }
+                allure([
+                    results: [[path: 'allure-results']]
+                ])
             }
         }
 
