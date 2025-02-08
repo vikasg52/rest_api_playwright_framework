@@ -52,12 +52,12 @@ pipeline {
         }
 
         stage('Deploy Report to Localhost') {
-            steps {
-                sh 'npm install -g http-server || true'  // Avoids failure if global install fails
-                sh 'nohup http-server allure-report -p 4050 &'
-                echo 'Allure report deployed at http://localhost:4050'
-            }
-        }
+    steps {
+        sh 'nohup http-server allure-report -p 4050 > http-server.log 2>&1 &'
+        sleep 5  // Give some time for the server to start
+        sh 'curl -I http://localhost:4050 || echo "Server failed to start"'
+    }
+}
     }
 
     post {
