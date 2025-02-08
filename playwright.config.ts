@@ -20,6 +20,7 @@ export default defineConfig({
     video: 'on',  // Keep video only on failed tests
     // video: 'retain-on-failure'?  // Keep video only on failed tests
     trace: 'on-first-retry', // ✅ Correct: Collect trace on first retry only
+    timezoneId: 'Asia/Kolkata'
   },
 
   // ✅ Corrected Reporter Syntax
