@@ -8,6 +8,9 @@ pipeline {
     environment {
         CI = "true"
         BASE_URL = "https://www.saucedemo.com"
+    ALLURE_RESULTS_DIR = "${WORKSPACE}/allure-results"
+    PLAYWRIGHT_REPORT_DIR = "${WORKSPACE}/playwright-report"
+
     }
 
     stages {
