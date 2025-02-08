@@ -8,9 +8,8 @@ pipeline {
     environment {
         CI = "true"
         BASE_URL = "https://www.saucedemo.com"
-    ALLURE_RESULTS_DIR = "${WORKSPACE}/allure-results"
-    PLAYWRIGHT_REPORT_DIR = "${WORKSPACE}/playwright-report"
-
+        ALLURE_RESULTS_DIR = "${WORKSPACE}/allure-results"
+        PLAYWRIGHT_REPORT_DIR = "${WORKSPACE}/playwright-report"
     }
 
     stages {
@@ -28,50 +27,35 @@ pipeline {
 
         stage('Run Playwright Tests') {
             steps {
-                script {
-                    try {
-                        sh 'npx playwright install --with-deps'
-                        sh 'npx playwright test'  // Run tests
-                    } catch (Exception e) {
-                        echo "Tests failed, but continuing to generate report..."
-                    }
-                }
+                sh "npx playwright test --output=${ALLURE_RESULTS_DIR}"  // Store results for Allure
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+                    archiveArtifacts artifacts: "${ALLURE_RESULTS_DIR}/**", allowEmptyArchive: true
                 }
             }
         }
 
         stage('Generate Allure Report') {
             steps {
-                sh 'npm run allure:generate || true'  // Prevent failure from stopping pipeline
+                sh "npx allure generate ${ALLURE_RESULTS_DIR} --clean -o ${PLAYWRIGHT_REPORT_DIR}"
             }
         }
 
-        stage('Publish Allure Report') {
-    steps {
-        script {
-            if (fileExists('allure-results')) {
+        stage('Publish Allure Report in Jenkins') {
+            steps {
                 allure([
-                    results: [[path: 'allure-results']]
+                    results: [[path: "${ALLURE_RESULTS_DIR}"]]
                 ])
-            } else {
-                echo '⚠️ Warning: No Allure results found!'
             }
         }
-    }
-}
 
         stage('Deploy Report to Localhost') {
-        steps {
-        sh 'npm install http-server'  // Install locally instead of globally
-        sh 'npx http-server allure-report -p 4051 &'
-        echo 'Allure report deployed at http://localhost:4051'
-    }
-}
-
+            steps {
+                sh "npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4050 &"
+                echo 'Allure report deployed at http://localhost:4050'
+            }
+        }
     }
 
     post {
