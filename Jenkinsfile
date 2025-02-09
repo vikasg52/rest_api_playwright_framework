@@ -73,14 +73,6 @@ pipeline {
         }
     }  // <- Closing brace for stages
 
-    // FILEPATH: /Users/v.kumar/Documents/rest_api_playwright_framework/Jenkinsfile
-    always {
-        cleanWs()  // Clean workspace after execution
-    }
-}  // <- Closing brace for pipeline
-
-// FILEPATH: /Users/v.kumar/Documents/rest_api_playwright_framework/Jenkinsfile
-
     post {
         always {
             cleanWs()  // Clean workspace after execution
