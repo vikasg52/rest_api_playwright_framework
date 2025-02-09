@@ -55,13 +55,13 @@ pipeline {
             steps {
                 script {
                     // 1️⃣ Find and kill any existing http-server process running on port 4051
-                    def processID = sh(script: "lsof -ti:4051 || true", returnStdout: true).trim()
+                    def processID = sh(script: "lsof -ti:4052 || true", returnStdout: true).trim()
                     if (processID) {
-                        echo "Stopping existing http-server process on port 4051 (PID: ${processID})"
+                        echo "Stopping existing http-server process on port 4052 (PID: ${processID})"
                         sh "kill -9 ${processID}"
-                        sleep 2  // Ensure the process fully stops
+                        sleep 4  // Ensure the process fully stops
                     } else {
-                        echo "No existing process running on port 4051"
+                        echo "No existing process running on port 4052"
                     }
 
                     // 2️⃣ Clean the previous report to ensure the latest one is deployed
@@ -73,7 +73,7 @@ pipeline {
 
                     // 4️⃣ Start a new HTTP server process in the background
                     echo "Starting http-server with the latest report..."
-                    sh "nohup npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4051 > /dev/null 2>&1 & disown"
+                    sh "nohup npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4052 > /dev/null 2>&1 & disown"
                 }
             }
         }
