@@ -14,7 +14,7 @@ build/
 
 # Playwright & Test Reports
 playwright-report/
-allure-results/
+allure-results/*
 allure-report/
 
 # Environment variables
