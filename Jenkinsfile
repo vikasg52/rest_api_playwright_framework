@@ -65,5 +65,3 @@ pipeline {
             cleanWs()  // Clean workspace after execution
         }
     }
-}
-}
