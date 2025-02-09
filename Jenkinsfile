@@ -59,10 +59,11 @@ pipeline {
         sh "npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4051 &"
         echo 'Allure report deployed at http://localhost:4051'
     }
-        }
+}
     post {
         always {
             cleanWs()  // Clean workspace after execution
         }
     }
+}
 }
