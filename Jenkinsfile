@@ -66,6 +66,7 @@ pipeline {
         echo 'Allure report deployed at http://localhost:4051'
     }
 }
+
     post {
         always {
             cleanWs()  // Clean workspace after execution
