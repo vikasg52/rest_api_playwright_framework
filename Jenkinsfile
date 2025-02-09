@@ -38,6 +38,7 @@ pipeline {
 
         stage('Generate Allure Report') {
             steps {
+                sh "rm -rf ${PLAYWRIGHT_REPORT_DIR} && mkdir -p ${PLAYWRIGHT_REPORT_DIR}"  // Clean previous reports
                 sh "npx allure generate ${ALLURE_RESULTS_DIR} --clean -o ${PLAYWRIGHT_REPORT_DIR}"
             }
         }
@@ -51,21 +52,16 @@ pipeline {
         }
 
         stage('Deploy Report to Localhost') {
-    steps {
-        // Ensure previous report is deleted before generating a new one
-        sh "rm -rf ${PLAYWRIGHT_REPORT_DIR} && mkdir -p ${PLAYWRIGHT_REPORT_DIR}"
+            steps {
+                // Kill any existing process using port 4051 before starting a new one
+                sh "fuser -k 4051/tcp || true"
 
-        // Generate the latest Allure report
-        sh "npx allure generate ${ALLURE_RESULTS_DIR} --clean -o ${PLAYWRIGHT_REPORT_DIR}"
-
-        // Kill any existing process using port 4051
-        sh "fuser -k 4051/tcp || true"
-
-        // Start the new server
-        sh "npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4051 &"
-        echo 'Allure report deployed at http://localhost:4051'
+                // Start the new server
+                sh "npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4051 &"
+                echo 'Allure report deployed at http://localhost:4051'
+            }
+        }
     }
-}
 
     post {
         always {
