@@ -54,17 +54,17 @@ pipeline {
         stage('Deploy Report to Localhost') {
             steps {
                 script {
-                    // Find process ID (PID) running on port 4051
-                    def processID = sh(script: "lsof -ti:4051", returnStdout: true).trim()
+    // Find process ID (PID) running on port 4051, ignore error if no process found
+    def processID = sh(script: "lsof -ti:4051 || true", returnStdout: true).trim()
 
-                    if (processID && processID.isNumber()) {
-                        echo "Stopping existing http-server process on port 4051 (PID: ${processID})"
-                        sh "kill -9 ${processID}"
-                        sleep 2  // Ensure the process fully terminates
-                    } else {
-                        echo "No existing process running on port 4051"
-                    }
-                }
+    if (processID) {  // Check if processID is non-empty
+        echo "Stopping existing http-server process on port 4051 (PID: ${processID})"
+        sh "kill -9 ${processID}"
+        sleep 2  // Wait for process to fully stop
+    } else {
+        echo "No existing process running on port 4051"
+    }
+}
 
                 // Start the HTTP server
                 sh "nohup npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4051 > /dev/null 2>&1 & disown"
