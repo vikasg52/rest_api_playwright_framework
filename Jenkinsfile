@@ -22,3 +22,68 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh 'npm install --no-bin-links'  // Avoid symlink issues
+            }
+        }
+
+        stage('Run Playwright Tests') {
+            steps {
+                sh "npx playwright test --reporter=line,allure-playwright"
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: "${ALLURE_RESULTS_DIR}/**", allowEmptyArchive: true
+                }
+            }
+        }
+
+        stage('Generate Allure Report') {
+            steps {
+                sh "rm -rf ${PLAYWRIGHT_REPORT_DIR} && mkdir -p ${PLAYWRIGHT_REPORT_DIR}"  // Clean previous reports
+                sh "npx allure generate ${ALLURE_RESULTS_DIR} --clean -o ${PLAYWRIGHT_REPORT_DIR}"
+            }
+        }
+
+        stage('Publish Allure Report in Jenkins') {
+            steps {
+                allure([
+                    results: [[path: "${ALLURE_RESULTS_DIR}"]]
+                ])
+            }
+        }
+
+        stage('Deploy Report to Localhost') {
+            steps {
+                script {
+                    // Find process ID (PID) running on port 4051
+                    def processID = sh(script: "lsof -ti:4051", returnStdout: true).trim()
+
+                    if (processID && processID.isNumber()) {
+                        echo "Stopping existing http-server process on port 4051 (PID: ${processID})"
+                        sh "kill -9 ${processID}"
+                        sleep 2  // Ensure the process fully terminates
+                    } else {
+                        echo "No existing process running on port 4051"
+                    }
+                }
+
+                // Start the HTTP server
+                sh "nohup npx http-server ${PLAYWRIGHT_REPORT_DIR} -p 4051 > /dev/null 2>&1 & disown"
+                echo 'Allure report deployed at http://localhost:4051'
+            }
+        }
+    }  // <- Closing brace for stages
+
+    // FILEPATH: /Users/v.kumar/Documents/rest_api_playwright_framework/Jenkinsfile
+    always {
+        cleanWs()  // Clean workspace after execution
+    }
+}  // <- Closing brace for pipeline
+
+// FILEPATH: /Users/v.kumar/Documents/rest_api_playwright_framework/Jenkinsfile
+
+    post {
+        always {
+            cleanWs()  // Clean workspace after execution
+        }
+    }
+}  // <- Closing brace for pipeline
