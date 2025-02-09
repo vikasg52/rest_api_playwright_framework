@@ -54,7 +54,7 @@ pipeline {
         stage('Deploy Report to Localhost') {
             steps {
                 script {
-                    // 1️⃣ Find and kill any existing http-server process running on port 4051
+                    // 1️⃣ Find and kill any existing http-server process running on port 4052
                     def processID = sh(script: "lsof -ti:4052 || true", returnStdout: true).trim()
                     if (processID) {
                         echo "Stopping existing http-server process on port 4052 (PID: ${processID})"
