@@ -58,8 +58,8 @@ pipeline {
                     def processID = sh(script: "lsof -ti:4052 || true", returnStdout: true).trim()
                     if (processID) {
                         echo "Stopping existing http-server process on port 4052 (PID: ${processID})"
-                        sh "kill -9 ${processID}"
-                        sleep 4  // Ensure the process fully stops
+                        sh "kill -9 ${processID}"  // Or use "fuser -k 4052/tcp || true"
+                        sleep 5  // Ensuring the process fully stops
                     } else {
                         echo "No existing process running on port 4052"
                     }
